@@ -60,4 +60,4 @@ t
 space = 40_000_000 - sizes["/"]
 
 keyss = findall(>=(3956976), sizes)
-[sizes[key] for key in keyss]
+minimum(sizes[key] for key in keyss)
