@@ -1,4 +1,5 @@
 using DataStructures
+using Memoize
 
 function part1(n)
     global flowchart = Dict{String, Int}()
@@ -29,19 +30,10 @@ function part1(n)
         flow = parse(Int, m.captures[2])
         tunnel = m.captures[3:end]
         flowchart[start] = flow
-        #if flow > 0
-            #flowmap[start] = vcat(start, tunnel)
-        #else
-            flowmap[start] = tunnel
-        #end
+        flowmap[start] = tunnel
     end
 
     start = "AA"
-    global str2int = Dict{String, Int}()
-    kk = sort(collect(keys(flowchart)))
-    for (i, k) in enumerate(kk)
-        str2int[k] = i
-    end
     flowopen = Dict{String, Int}()
 
     @time iter(start, flowopen, n)
@@ -66,7 +58,7 @@ function iter(node, flowopen, n)
     return s
 end
 
-function dist(x, y)
+@memoize function dist(x, y)
     # BFS. Distance between points in flowmap
     q = Queue{String}()
     enqueue!(q, x)
