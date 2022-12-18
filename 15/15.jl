@@ -92,8 +92,10 @@ for x1 in x, x2 in y
     end
 end
 
+function fast(xs, ys)
 n = 0
 nmax = length(xs)
+part2 = 0
 Threads.@threads for i = 1:nmax
     x = xs[i]-stepx÷2-1:xs[i]+stepx÷2+1
     y = ys[i]-stepy÷2-1:ys[i]+stepy÷2+1
@@ -103,9 +105,15 @@ Threads.@threads for i = 1:nmax
     for z1 in x, z2 in y
         if V(z1, z2) == 0
             @show V(z1, z2), z1, z2
+            part2 = z1*4000000 + z2
+            @show part2
+            break
         end
     end
 end
+@show part2
+part2
+end
 
-
-part2 = x1*4000000 + x2
+p2 = fast(xs, ys)
+println(p2)
