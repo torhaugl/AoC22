@@ -1,20 +1,3 @@
-# ####
-# 
-# .#.
-# ###
-# .#.
-# 
-# ..#
-# ..#
-# ###
-# 
-# #
-# #
-# #
-# #
-# 
-# #
-
 A1 = [0 0 1 1 1 1 0]
 A2 = [0 0 0 1 0 0 0
       0 0 1 1 1 0 0
@@ -105,19 +88,22 @@ part1("17/test.txt")
 part1("17/input.txt")
 
 jet_pattern = readline("17/input.txt")
+jet_pattern = readline("17/test.txt")
 B = Set{Tuple{Int, Int}}()
 height = 3
 i = 0
 j = 0
 prev = As[j % 5 + 1]
 
-while j < 1_000_000_000_000
-    if (j % 1000) == 0
-        @show j
-    end
-    i += 1
+Nmax = 1_000_000_000_000
+#while j < 1_000_000_000_000
+visited = false
 
-    next = move(prev, jet_pattern[(i-1) % length(jet_pattern) + 1])
+seen_states = Dict{Tuple{Matrix{Int64}, Int, Int},Tuple{Int,Int}}()
+
+toadd = 0
+while j < Nmax
+    next = move(prev, jet_pattern[i%length(jet_pattern) + 1])
     next_pts = [(x[1]+height, x[2]) for x in findall(==(1), next)]
 
     if !isempty(intersect(B, next_pts))
@@ -134,10 +120,39 @@ while j < 1_000_000_000_000
         j += 1
         prev = As[j % 5 + 1]
         height = maximum(x[1] for x in B) + 3
+
+        if height - 3 > 6
+            key = (extract_top_n(B, 6), j%5+1, i%length(jet_pattern)+1)
+            if haskey(seen_states, key) && !visited
+                visited = true
+                h, jold = seen_states[key]
+                jnew = j - jold
+                ntimes = Nmax ÷ jnew - 1
+                j = jold + jnew * ntimes
+                toadd = (height - 3 - h) * (ntimes - 1)
+            else
+                seen_states[key] = (height - 3, j)
+            end
+        end
     else
         prev = next
         height -= 1
     end
+
+    i += 1
+end
+
+@show maximum(x[1] for x in B) + toadd
+
+
+function extract_top_n(B, n)
+    # Inspired by MarcusTL12
+    A = zeros(Int, n, 7)
+    height = maximum(x[1] for x in B)
+    for i = 1:n, j=1:7
+        A[i,j] = (height+1-i,j) ∈ B
+    end
+    return A
 end
 
 # test 1514285714288
