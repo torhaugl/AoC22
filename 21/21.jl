@@ -62,37 +62,6 @@ function reduce_lines!(lines, root_line1, root_line2)
     return lines
 end
 
-@time part1_eval()
-
-@time begin
-    lines, root_line1, root_line2 = parse("21/input.txt")
-    reduce_lines!(lines, root_line1, root_line2)
-end
-
-# Part 2
-
-# Reduce the amount of equations
-
-lines, root_line1, root_line2 = parse("21/input.txt")
-filter!(x -> !startswith(x, "humn"), lines)
-push!(lines, "pnhm= zvcm + 0")
-lines = reduce_lines!(lines, root_line1, root_line2)
-
-# Invert relations and insert pnhm = zvcm = 32853424641061
-lines = invert_relations!(lines)
-lines = reduce_lines!(lines, "humn", "jjzz")
-lines = invert_relations!(lines)
-
-lines = ["abcd= 1234 + wxyz",
-         "abcd= 1234 - wxyz",
-         "abcd= 1234 * wxyz",
-         "abcd= 1234 ÷ wxyz",
-         "abcd= wxyz + 1234",
-         "abcd= wxyz - 1234",
-         "abcd= wxyz * 1234",
-         "abcd= wxyz ÷ 1234"]
-
-invert_relations!(lines)
 
 function invert_relations!(lines)
     for (i, line) in enumerate(lines)
@@ -146,4 +115,24 @@ function invert_relations!(lines)
         end
     end
     return lines
+end
+
+#@time part1_eval()
+
+@time begin
+    lines, root_line1, root_line2 = parse("21/input.txt")
+    reduce_lines!(lines, root_line1, root_line2)
+end
+
+# Part 2
+
+@time begin 
+    lines, root_line1, root_line2 = parse("21/input.txt")
+    filter!(x -> !startswith(x, "humn"), lines)
+    push!(lines, "$root_line1= $root_line2 + 0")
+    lines = reduce_lines!(lines, root_line1, root_line2)
+
+    # Invert relations and insert pnhm = zvcm = 32853424641061
+    lines = invert_relations!(lines)
+    lines = reduce_lines!(lines, "humn", "pnhm")
 end
