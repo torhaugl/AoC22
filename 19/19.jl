@@ -72,9 +72,27 @@ function part1(n)
     return x
 end
 
+function part2(n)
+    input = parse_input("19/input.txt")
+    x = Int[]
+    for i = 1:3
+        oremax = maximum((input[1][i][1], input[2][i][1], input[3][i][1], input[4][i][1]))
+        clamax = maximum((input[1][i][2], input[2][i][2], input[3][i][2], input[4][i][2]))
+        obsmax = maximum((input[1][i][3], input[2][i][3], input[3][i][3], input[4][i][3]))
+        extra = (input[1][i], input[2][i], input[3][i], input[4][i], (oremax, clamax, obsmax))
+
+        robots = [1, 0, 0, 0]
+        currency = [0, 0, 0, 0]
+        @time push!(x, iter(n, robots, currency, extra))
+	@show x[end]
+    end
+    return x
+end
+
 #@show part1(1)
-@show part1(20)
+#@show part1(20)
 #@show part1(21)
 #@show part1(22)
 #@show part1(23)
 #@show part1(24)
+@show part2(32)
