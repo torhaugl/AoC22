@@ -23,43 +23,51 @@ function iter(n, robots, currency, extra)
     v = 0
     next_currency = copy(currency) .+ robots
 
-    if all(currency .>= extra[1])
+    if all(currency .>= extra[4])
+        next_currency .-= extra[4]
+        next_robots = copy(robots) .+ (0, 0, 0, 1)
+        return iter(n-1, next_robots, next_currency, extra)
+        next_currency .+= extra[4]
+    end
+
+    if all(currency .>= extra[1]) && robots[1] < extra[5][1]
         next_currency .-= extra[1]
         next_robots = copy(robots) .+ (1, 0, 0, 0)
         v = max(v, iter(n-1, next_robots, next_currency, extra))
         next_currency .+= extra[1]
     end
-    if all(currency .>= extra[2])
+    if all(currency .>= extra[2]) && robots[1] < extra[5][2]
         next_currency .-= extra[2]
         next_robots = copy(robots) .+ (0, 1, 0, 0)
         v = max(v, iter(n-1, next_robots, next_currency, extra))
         next_currency .+= extra[2]
     end
-    if all(currency .>= extra[3])
+    if all(currency .>= extra[3]) && robots[1] < extra[5][3]
         next_currency .-= extra[3]
         next_robots = copy(robots) .+ (0, 0, 1, 0)
         v = max(v, iter(n-1, next_robots, next_currency, extra))
         next_currency .+= extra[3]
     end
-    if all(currency .>= extra[4])
-        next_currency .-= extra[4]
-        next_robots = copy(robots) .+ (0, 0, 0, 1)
-        v = max(v, iter(n-1, next_robots, next_currency, extra))
-        next_currency .+= extra[4]
-    else
-        # WAIT
-        v = max(v, iter(n-1, robots, next_currency, extra))
-    end
+
+    # WAIT
+    v = max(v, iter(n-1, robots, next_currency, extra))
 
     return v
 end
 
 function part1(n)
     input = parse_input("19/test.txt")
-    extra = (input[1][1], input[2][1], input[3][1], input[4][1])
+    oremax = maximum((input[1][1][1], input[2][1][1], input[3][1][1], input[4][1][1]))
+    clamax = maximum((input[1][1][2], input[2][1][2], input[3][1][2], input[4][1][2]))
+    obsmax = maximum((input[1][1][3], input[2][1][3], input[3][1][3], input[4][1][3]))
+    extra = (input[1][1], input[2][1], input[3][1], input[4][1], (oremax, clamax, obsmax))
+
     robots = [1, 0, 0, 0]
     currency = [0, 0, 0, 0]
     @time iter(n, robots, currency, extra)
 end
 
-part1(20)
+@show part1(1)
+@show part1(20)
+@show part1(23)
+@show part1(24)
