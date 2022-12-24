@@ -102,7 +102,6 @@ end
 
 function part2()
     start, goal, blizzard, walls = parse_input_sparse("24/input.txt")
-    @show start goal
 
     n1, blizzard = start_search(start, goal, blizzard, walls)
     n2, blizzard = start_search(goal, start, blizzard, walls, true)
