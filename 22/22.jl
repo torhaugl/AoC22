@@ -266,17 +266,6 @@ function move2(start, dir, side, ground, walls)
     end
 end
 
-begin
-println("START")
-for side = 1:6
-    pos, dir = [20, 0], [0, -1]
-    newpos, newdir, newside = move2(pos, dir, side, ground1, wall1)
-    newnewpos, newnewdir, newnewside = move2(newpos, -newdir, newside, ground1, wall1)
-
-    @show side
-    @show newnewpos == pos
-    @show newnewdir == -dir
-    @show newnewside == side
-    println()
-end
-end
+part1()
+part2()
+# 74*4+135*1000+1
